@@ -1,0 +1,425 @@
+<style lang="less">
+  .comment {
+    padding: 0 30rpx;
+    margin-bottom: 20rpx;
+    background-color: #ffffff;
+    font-weight: normal;
+    color: #333333;
+    letter-spacing: 0;
+    .comment-title {
+      margin-top: 47rpx;
+      margin-bottom: 23rpx;
+      font-size: 28rpx;
+      line-height: 32rpx;
+      .title-tip {
+        font-size: 24rpx;
+        line-height: 28rpx;
+        color: #aaaaaa;
+      }
+    }
+    .comment-bd {
+      .comment-send-info {
+        cursor: pointer;
+        .send {
+          height: 96rpx;
+          line-height: 96rpx;
+          padding-left: 30rpx;
+          border-radius: 4rpx;
+          background-color: #f8f8f8;
+          box-sizing: border-box;
+          .tip {
+            color: #999999;
+            font-size: 28rpx;
+          }
+          .send-btn {
+            font-size: 32rpx;
+            float: right;
+            width: 152rpx;
+            text-align: center;
+            height: 96rpx;
+            line-height: 96rpx;
+            color: #ffffff;
+            background-color: #FF552E;
+            border-radius: 4rpx;
+          }
+        }
+        &:after {
+          content: "";
+          height: 0;
+          line-height: 0;
+          display: block;
+          visibility: hidden;
+          clear: both;
+        }
+      }
+      .comment-info-wrap {
+        .comment-info {
+          padding-top: 25rpx;
+          position: relative;
+          cursor: pointer;
+          image {
+            float: left;
+            line-height: 0;
+            margin-bottom: 0;
+            width: 80rpx;
+            height: 80rpx;
+            border-radius:50%;
+          }
+          .info-contain {
+            margin-left: 98rpx;
+            position: relative;
+            .info-hd {
+              font-size: 24rpx;
+              line-height: 28rpx;
+              margin-bottom: 14rpx;
+              position: relative;
+              .like {
+                color: #aaaaaa;
+                padding: 30rpx;
+                margin-top: -30rpx;
+                margin-right: -30rpx;
+                position: absolute;
+                right: 0;
+                &:before {
+                  content: '';
+                  display: inline-block;
+                  background: url("//gp.58cdn.com.cn/global/unlike.png") 0 0 no-repeat;
+                  width: 27rpx;
+                  height: 27rpx;
+                  background-size: 25rpx auto;
+                  position: relative;
+                  top: 1px;
+                  margin-right: 5rpx;
+                }
+                &.liked {
+                  color: #FE7657;
+                  &:before {
+                    background-image: url("//gp.58cdn.com.cn/global/liked.png");
+                  }
+                }
+              }
+            }
+            .info-cb {
+              font-size: 30rpx;
+              line-height: 40rpx;
+              word-wrap: break-word;
+              word-break: break-all;
+            }
+            .info-child-cb-wrap {
+              padding-bottom: 26rpx;
+            }
+            .info-child-cb {
+              position: relative;
+              margin-top: 16rpx;
+              background-color: #f6f6f6;
+              border-radius: 2rpx;
+              font-size: 26rpx;
+              line-height: 32rpx;
+              color: #151515;
+              word-wrap: break-word;
+              word-break: break-all;
+              padding: 9rpx 32rpx 9rpx 12rpx;
+              .child-cb {
+                margin-top: 16rpx;
+                &:first-child {
+                  margin-top: 0;
+                }
+                .child-nick {
+                  color: #5A649E;
+                }
+              }
+              .info-child-more {
+                margin-top: 16rpx;
+                color: #5A649E;
+              }
+              &:before {
+                content: '';
+                position: absolute;
+                width: 15rpx;
+                height: 15rpx;
+                background-color: #f6f6f6;
+                transform: rotate(45deg);
+                top: 8rpx;
+                left: 2rpx;
+              }
+            }
+            .time-info {
+              font-size: 24rpx;
+              line-height: 28rpx;
+              color: #aaaaaa;
+              padding: 18rpx 0 19rpx 0;
+              .time {
+                margin-right: 30rpx;
+              }
+            }
+          }
+          &:after {
+            content: '';
+            position: absolute;
+            height: 1px;
+            left: 0;
+            bottom: 0;
+            right: -30rpx;
+            background-color: #F2F2F2;
+            transform: scaleY(.5);
+            transform-origin-y:bottom;
+          }
+          &:last-child:after {
+            content: none;
+          }
+        }
+      }
+    }
+    .more {
+      padding: 79rpx 0;
+      line-height: 40rpx;
+      color: #ff552e;
+      font-size: 28rpx;
+      text-align: center;
+      cursor: pointer;
+      &:before {
+        content: '查看更多留言';
+        display: inline;
+      }
+      &:after {
+        content: ' ';
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-top: 8rpx solid transparent;
+        border-left: 8.9rpx solid rgba(255, 85, 46, 0.80);
+        border-bottom: 8rpx solid transparent;
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 15rpx;
+      }
+      &.loading:before {
+        content: '加载中...'
+      }
+      &.loading:after {
+        content: normal;
+      }
+      &.no-data:before {
+        content: '没有更多评论'
+      }
+      &.no-data:after {
+        content: normal;
+      }
+      &.error:before {
+        content: '网络失败,点击重试';
+      }
+      &.error:after {
+        content: normal;
+      }
+    }
+    .toast {
+      display: none;
+      position: fixed;
+      z-index: 1002;
+      left: 50%;
+      top: 50%;
+      padding: 30rpx;
+      margin-left: -122.5rpx;
+      margin-top: -42rpx;
+      background: rgba(0, 0, 0, 0.80);
+      border-radius: 2px;
+      line-height: 1;
+      text-align: center;
+      color: #ffffff;
+    }
+  }
+  /*end*/
+  /*发布评论*/
+  .ui-comment-box {
+    position: absolute;
+    display: none;
+    z-index: 1001;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background-color: #ffffff;
+    .comment-wrap {
+      position: fixed;
+      background-color: #ffffff;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      .hd {
+        padding: 20rpx;
+        height: 54rpx;
+        line-height: 54rpx;
+        font-size: 32rpx;
+        text-align: center;
+        .close {
+          position: absolute;
+          left: 20rpx;
+          font-family: marvelfont;
+          display: inline-block;
+          vertical-align: middle;
+          -webkit-font-smoothing: antialiased;
+          &:before {
+            content: "\E00A";
+          }
+        }
+        .send-btn {
+          position: absolute;
+          right: 20rpx;
+          a {
+            font-size: 48rpx;
+            padding: 0 40rpx;
+            display: inline-block;
+            vertical-align: middle;
+            border: 1px solid #ccc;
+            border-radius:16rpx;
+            color: rgba(120, 120, 120, .3);
+            height: 100rpx;
+            line-height: 100rpx;
+            -webkit-transform: scale(.5);
+            -moz-transform: scale(.5);
+            -ms-transform: scale(.5);
+            -o-transform: scale(.5);
+            transform: scale(.5);
+            -webkit-transform-origin: right top;
+            -moz-transform-origin: right top;
+            -ms-transform-origin: right top;
+            -o-transform-origin: right top;
+            transform-origin: right top;
+          }
+          &.active a {
+            border-color: #ff8200;
+            background-color: #ff8200;
+            color: #ffffff;
+          }
+        }
+        .title {
+          display: inline-block;
+          vertical-align: middle;
+        }
+        .num {
+          position: absolute;
+          top: 20rpx;
+          right: 130rpx;
+          color: #aaa;
+          span {
+            color: #555555;
+          }
+        }
+      }
+      .content {
+        margin: 0 20rpx;
+        textarea {
+          margin-top: 20rpx;
+          webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+          -webkit-tap-highlight-color: transparent!important;
+          background-color: transparent;
+          resize: none;
+          width: 100%;
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          box-sizing: border-box;
+          outline: 0;
+          border: 0px;
+          font-size: 32rpx;
+          &.visible {
+            visibility: hidden;
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="comment">
+    <view class="comment-bd">
+      <view class="comment-send-info" @tap="replay()">
+        <view class="send">
+          <text class="tip">{{tip}}</text>
+          <text class="send-btn">留言</text>
+        </view>
+      </view>
+      <view class="comment-title" wx:if="{{total}}">
+        <text>留言内容</text><text class="title-tip">（共{{total}}条）</text>
+      </view>
+      <view class="comment-info-wrap">
+        <repeat for="{{infos}}" key="index" index="index" item="item">
+          <view class="comment-info" @tap="replay({{item}})">
+            <image src="{{item.headimgurl?item.headimgurl:'//gp.58cdn.com.cn/global/common/pic_user.png'}}"></image>
+            <view class="info-contain">
+              <view class="info-hd">
+                <text wx:if="{{item.callbacknickname}}">{{item.nickname}}{{openid == item.openid?'('+userTip+')':''}} 回复@{{item.callbacknickname}}{{openid == item.callbackopenid?'('+userTip+')':''}}</text>
+                <text wx:if="{{!item.callbacknickname}}">{{item.nickname}}{{openid == item.openid?'('+userTip+')':''}}</text>
+                <text wx:if="{{item.likemsg}}" class="like liked" @tap.stop="like({{item}},false)"><text>{{item.likenum}}</text></text>
+                <text wx:if="{{!item.likemsg}}" class="like" @tap.stop="like({{item}},true)"><text>{{item.likenum}}</text></text>
+              </view>
+              <view class="info-cb">{{item.content}}</view>
+              <view class="time-info"><text class="time">{{formatDate(item.timestr)}}</text>回复</view>
+              <view class="info-child-cb-wrap" wx:if="item.callbackmsg.length">
+                <view class="info-child-cb">
+                  <repeat for="{{item.callbackmsg}}" key="msgIndex" index="msgIndex" item="msgItem">
+                    <view class="child-cb" wx:hidden="{{!item.__open && msgIndex + 1 > childSize}}">
+                      <text class="child-nick">{{msgItem.nickname}}：</text>
+                      <text>{{msgItem.content}}</text>
+                    </view>
+                  </repeat>
+                  <view class="info-child-more" @tap.stop="openMsg({{item}})" wx:if="{{item.callbackmsg.length > childSize}}">更多回复</view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </repeat>
+      </view>
+    </view>
+    <view class="more hide"></view>
+    <view class="toast"></view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Comment extends wepy.component {
+    props = {
+      infos: Object,
+      total: {
+        type: Number,
+        default: 0
+      },
+      tip: {
+        default: '给我留言，了解更多~'
+      },
+      userTip: {
+        default: '帖主'
+      },
+      openid: {
+        default: '1121221'
+      },
+      infoid: {
+        default: '29093259379330'
+      },
+      childSize: {
+        type: Number,
+        default: 2
+      }
+    }
+
+    formatDate(datastr) {
+      return datastr
+    }
+
+    methods = {
+      replay(item) {
+        console.log(item)
+      },
+      like(messageid,cancel) {
+        console.log(messageid,cancel)
+      },
+      openMsg(item) {
+        item.__open = true
+        this.$apply()
+        console.log(item)
+      }
+    }
+  }
+</script>

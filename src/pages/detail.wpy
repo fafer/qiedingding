@@ -1,0 +1,454 @@
+<style lang="less">
+  .banner {
+    overflow: hidden;
+    margin: 0 30rpx;
+    image {
+      margin: 20rpx 0;
+      display: block;
+      height: 90rpx;
+      left: 50%;
+      position: relative;
+      transform: translateX(-50%);
+      line-height: 0;
+    }
+  }
+  .detail-main {
+    .base-info {
+      .section {
+        margin-left: 29rpx;
+        margin-right: 31rpx;
+        box-sizing: border-box;
+        padding-top: 44rpx;
+        padding-bottom: 45rpx;
+        position: relative;
+        .detail-hd {
+          font-size: 34rpx;
+          line-height: 32rpx;
+          margin-bottom: 15rpx;
+          color: #000000;
+        }
+        .tip-hd {
+          color: #999999;
+          line-height: 36rpx;
+          font-size: 24rpx;
+          .time:after {
+            content: '发布';
+            margin-left: 1em;
+          }
+        }
+        &:after {
+          content: '';
+          position: absolute;
+          height: 1px;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          background-color: #e0e0e0;
+          transform: scaleY(.5);
+          transform-origin-y: bottom;
+        }
+        &.contact {
+          padding-top: 31rpx;
+          padding-bottom: 31rpx;
+          line-height: 48rpx;
+          font-size: 32rpx;
+          color: #000000;
+          position: relative;
+          .contact-name {
+            color: #ff552e;
+          }
+          .contact-tel {
+            background: url("http://gp.58cdn.com.cn/global/final/img_tit.png") no-repeat 0 -63rpx;
+            background-size: 50rpx 180rpx;
+            height: 46rpx;
+            width: 55rpx;
+            position: absolute;
+            right: 130rpx;
+            top: 31rpx;
+          }
+          &:after {
+            content: none;
+          }
+        }
+      }
+    }
+    .content {
+      margin-left: 29rpx;
+      margin-right: 31rpx;
+      font-size: 32rpx;
+      line-height: 1.5;
+      color: #000000;
+      word-wrap: break-word;
+      word-break: normal;
+    }
+    .tip58 {
+      font-size: 36rpx;
+      margin-bottom: 60rpx;
+    }
+    .pic {
+      margin: 0 30rpx;
+      image {
+        display: block;
+        width: 100%;
+        height: auto;
+        margin-bottom: 20rpx;
+      }
+    }
+    .broad {
+      background-color: #f8f8f8;
+      padding: 35rpx 30rpx 6rpx 30rpx;
+      #social-banner {
+        margin-top: -32rpx;
+        padding-top: 32rpx;
+        image {
+          width: 690rpx;
+          height: 132rpx;
+        }
+      }
+      .figure,
+      .social-banner {
+        margin-bottom: 32rpx;
+        display: block;
+        height: 132rpx;
+        width: 690rpx;
+      }
+      .figure {
+        background: url("http://gp.58cdn.com.cn/global/detail-icon-new.png") 0 -338rpx no-repeat;
+        background-size: 690rpx 470rpx;
+        .figure-wrap {
+          text-align: right;
+          margin-right: 33rpx;
+          position: relative;
+        }
+        .figure-nick {
+          color: #ffffff;
+          font-size: 30rpx;
+          line-height: 48rpx;
+          font-family: PingFangSC-Semibold;
+          margin-right: 15rpx;
+          position: relative;
+          top: -7rpx;
+          &:before {
+            content: '';
+            display: inline-block;
+            width: 89rpx;
+            height: 30rpx;
+            margin-right: 15rpx;
+            position: relative;
+            top: 4rpx;
+            background: url("//gp.58cdn.com.cn/global/detail-icon-new.png") -55rpx 0 no-repeat;
+            background-size: 690rpx 470rpx;
+          }
+        }
+        .figure-join {
+          display: inline-block;
+          cursor: pointer;
+          width: 130rpx;
+          height: 38rpx;
+          margin-top: 23rpx;
+          background: url("//gp.58cdn.com.cn/global/detail-icon-new.png") -171rpx 0 no-repeat;
+          background-size: 690rpx 470rpx;
+        }
+        .figure-tip {
+          color: #ffffff;
+          font-size: 22rpx;
+          line-height: 30rpx;
+          margin-top: 12rpx;
+        }
+      }
+    }
+    .rec-wrap {
+      float: right;
+      margin-right: 140rpx;
+      .rec {
+        position: fixed;
+        top: 240rpx;
+        width: 116rpx;
+        height: 118rpx;
+        opacity: 1;
+        z-index: 900;
+        cursor: pointer;
+        color: #ffffff;
+        transition-property: opacity, transform;
+        transition-duration: .3s;
+        span {
+          font-size: 28rpx;
+          position: relative;
+          left: 125rpx;
+          height: 104rpx;
+          width: 102rpx;
+          display:flex;
+          flex-wrap: wrap;
+          justify-content:center;
+          align-items:center;
+        }
+        &:before {
+          content: '';
+          background: url("//gp.58cdn.com.cn/global/detail-icon-new.png") -.57rem -.25rem no-repeat;
+          background-size: 3.45rem auto;
+          width: 1.16rem;
+          height: 1.18rem;
+          display: inline-block;
+          position: absolute;
+          z-index: -1;
+        }
+        .rec-close {
+          font-family: marvelfont;
+          -webkit-font-smoothing: antialiased;
+          position: absolute;
+          right: -.1rem;
+          top: 0;
+          color: #999999;
+          &:after {
+            content: '\E00A';
+          }
+        }
+        &.fadeout {
+          opacity: 0;
+          transform: scale(0);
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <scroll-view class="container">
+    <header :index="index" :cate="cate" @join.user="join"></header>
+    <view class="banner" wx:if="{{advert}}">
+      <navigator wx:if="{{advert.url}}" url="{{advert.url}}">
+        <image mode="widthFix" src="{{advert.img}}"></image>
+      </navigator>
+      <image wx:elif="{{advert.url}}" mode="widthFix" src="{{advert.img}}"></image>
+    </view>
+    <view class="detail-main">
+      <view class="base-info">
+        <view class="section">
+          <view class="detail-hd">{{cate.name}}信息</view>
+          <view class="tip-hd">
+            <view class="time">{{postTime}}</view>
+            <view>{{city}}{{area?' - ' + area:''}}</view>
+          </view>
+        </view>
+        <view class="section contact">
+          <repeat for="{{contacts}}" key="index" index="index" item="item">
+            <view wx:if="{{item.id === '0'}}">
+              <text class="contact-name">电话：</text><text>{{item.value}}</text>
+              <text @tap="tel({{item.value}})" class="contact-tel"></text>
+            </view>
+            <view wx:if="{{item.id === '1'}}">
+              <text class="contact-name">邮箱：</text><text>{{item.value}}</text>
+            </view>
+            <view wx:if="{{item.id === '2'}}">
+              <text class="contact-name">微信：</text><text>{{item.value}}</text>
+            </view>
+          </repeat>
+        </view>
+      </view>
+      <view class="section content">{{content}}</view>
+      <view class="section pic" wx:if="{{pics.length}}">
+        <repeat for="{{pics}}" key="index" index="index" item="item">
+          <image mode="widthFix" src="{{item}}"></image>
+        </repeat>
+        <view class="tip58">{{tips}}</view>
+      </view>
+      <comment :infos="msglistjson" :total="msgtotal"></comment>
+      <view class="section broad">
+        <view class="figure" wx:if="{{figure}}">
+          <view class="figure-wrap">
+            <text class="figure-nick">海外社群 · 曼谷</text>
+            <text class="figure-join"></text>
+          </view>
+          <view class="figure-wrap">
+            <text class="figure-tip">1个微信号=10000个海外生活Tips</text>
+          </view>
+        </view>
+        <view id="social-banner" wx:if="{{banners.length}}">
+          <repeat for="{{banners}}" key="index" index="index" item="item">
+            <navigator wx:if="{{item.url}}" url="{{item.url}}" class="social-banner">
+              <image src="{{item.img}}"></image>
+            </navigator>
+            <image class="social-banner" wx:if="{{!item.url}}" src="{{item.img}}"></image>
+          </repeat>
+        </view>
+      </view>
+      <detailrecommend :infos="recommend" :city="city" :cate="cate"></detailrecommend>
+    </view>
+  </scroll-view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import DetailHeader from '@/components/detailHeader'
+  import Comment from '@/components/comment'
+  import DetailRecommend from '@/components/detailRecommend'
+  export default class Test extends wepy.page {
+    config = {
+      navigationBarTitleText: '详情页'
+    }
+    data = {
+      index: 'http://m.com',
+      cate: {
+        name: '招聘',
+        value: 'zhaopin'
+      },
+      advert: {
+        img: 'http://gp.58cdn.com.cn/global/sldetailbanner2.jpg',
+        url: 'http://gm.58.com/glus-news/glotherinformation/31951269635329.html'
+      },
+      postTime: '2017-04-22 17:05',
+      city: '洛杉矶县',
+      area: '亚凯迪亚',
+      contacts: [{
+          id: '0',
+          value: '626-094-8765'
+        },
+        {
+          id: '1',
+          value: 'sadasd@hotmail.com'
+        },
+        {
+          id: '2',
+          value: 'sdasdas'
+        }
+      ],
+      content: `
+                              连锁餐饮经理 
+                              1、市场营销或管理类专业毕业； 
+                              2、五年以上餐饮酒店工作经验，其中两年以上高层管理经验有餐饮行业的从业背景； 
+                              3、热爱餐饮行业，精通品牌策划、餐饮运营管理； 
+                              4、全面负责连锁餐厅的管理工作； 
+                              5、善于管理，制定公司发展规划，完成公司各项管理制度。
+                            `,
+      tips: `
+                              5、善于管理，制定公司发展规划，完成公司各项管理制度。
+                            `,
+      pics: [
+        'http://pic.58.com/p1/tiny/n_v1bj3gzsaelc3fr4ecvbua.jpg',
+        'http://pic.58.com/p1/tiny/n_v1bj3gzsaelc3fr4ecvbua.jpg',
+        'http://pic.58.com/p1/tiny/n_v1bj3gzsaelc3fr4ecvbua.jpg'
+      ],
+      msglistjson: [{
+        callbackmsg: [{
+          nickname: '君君',
+          content: '一起找顺义的工作，商务车机。'
+        }, {
+          nickname: '明明',
+          content: '一起找顺义的工作，商务车机。一起找顺义的工作，商务车机'
+        }, {
+          nickname: '君君',
+          content: '一起找顺义的工作，商务车机。'
+        }],
+        callbackid: 760,
+        callbacknickname: '',
+        callbacknum: 0,
+        callbackopenid: '',
+        callbackuserid: 0,
+        cityname: 23869,
+        content: '1',
+        fcatename: 397041,
+        headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKxF1vVNl18ia4etCHGNgsTvSs2DUEkIUgq1yS0hds6yZsX4VHg1SAp5CCzmN6XBpccMjmdLtk5DWw/0',
+        infoid: 32468581328582,
+        infouserid: 48383194319391,
+        istop: 1,
+        likemsg: false,
+        likenum: 0,
+        messageid: 687,
+        nickname: '四叶草',
+        openid: 'oKGP9v_bYpqXEZOQiQn3hTRY4vEc',
+        scatename: 397087,
+        state: 1,
+        time: '2017-11-30 17:21:51.0',
+        timestr: '2017-11-30 17:13:24',
+        type: 2,
+        userid: 0
+      }, {
+        callbackmsg: [],
+        callbackid: 0,
+        callbacknickname: '',
+        callbacknum: 0,
+        callbackopenid: '',
+        callbackuserid: 0,
+        cityname: 20680,
+        content: '不能收到？',
+        fcatename: 397039,
+        headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83er6OV33jHia3UwAR4iaYDv7WU9q4t4LdSHpMKewWxGMgXMZibd7iaDx6G1iaGDeVdib9sIhNXsCZia5BleKg/0',
+        infoid: 32468581328582,
+        infouserid: 42813795642115,
+        istop: 1,
+        likemsg: false,
+        likenum: 0,
+        messageid: 782,
+        nickname: 'Jason Cheung',
+        openid: 'oKGP9v6GvOXd10D9zgRp-sqfj-_8',
+        scatename: 397078,
+        state: 1,
+        time: '2017-12-22 14:18:07.0',
+        timestr: '2017-12-22 14:18:07',
+        type: 2,
+        userid: 0
+      }, {
+        callbackmsg: [],
+        callbackid: 760,
+        callbacknickname: '',
+        callbacknum: 0,
+        callbackopenid: '',
+        callbackuserid: 0,
+        cityname: 23869,
+        content: '哈哈',
+        fcatename: 397041,
+        headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83er6OV33jHia3UwAR4iaYDv7WU9q4t4LdSHpMKewWxGMgXMZibd7iaDx6G1iazK3saia80nE4JppP1RlWWHg/0',
+        infoid: 32468581328582,
+        infouserid: 48383194319391,
+        istop: 0,
+        likemsg: false,
+        likenum: 10,
+        messageid: 685,
+        nickname: 'Jason Cheung',
+        openid: 'oKGP9v6GvOXd10D9zgRp-sqfj-_8',
+        scatename: 397087,
+        state: 1,
+        time: '2017-11-30 17:13:24.0',
+        timestr: '2017-11-30 17:13:24',
+        type: 2,
+        userid: 0
+      }],
+      msgtotal: 10,
+      figure: true,
+      banners: [{
+        img: 'http://gp.58cdn.com.cn/global/sldetailbanner2.jpg',
+        url: ''
+      },{
+        img: 'http://gp.58cdn.com.cn/global/sldetailbanner2.jpg',
+        url: 'http://gp.58cdn.com.cn/global/sldetailbanner2.jpg'
+      }],
+      recommend: [{
+        istop: true,
+        desc: `【发布信息常见问题】【收费Or免费】1.为什么不能发布二维码和连接？答：我们无法确认二维码和连接背后隐藏什么东西，为了用户安全，58同城曼谷2号，拒绝发布没有确认过的二维码和连接。2.能否去广告单是发布自己所发布的信息？答：我们绝大部分的便民信息都是免费推广，也有美丽帅气大方的城主给我们发红包，除此之外广告收入目前是我们工作人员最主要的收入，望各位曼谷城的城主高抬贵手留一口饭吃。3.什么样的信息需要收费？答：商业信息，业务推广信息，需要重复发布的信息均需要收费。4.什么样的信息可以免费发布？答：非中介类的便民信息，包括招聘求职，出租招租，二手买卖，寻人寻物，美食推荐，打听帮问等等。5.发布的信息是否全部可信可靠？答：绝大部分信息来源于素未谋面的线上朋友，我们会初步判定是否涉嫌诈骗以及违法。各位城主的举报也是我们识别假消息的重要途径，一有嫌疑马上下架，一旦确认永不再用此人的信息来源。信息真伪请各位城主自辩。`,
+        time: '2017-4-22 17:05',
+        city: '洛杉矶县 - 亚凯迪亚',
+        url:'http://gpic3.58cdn.com.cn/p1/small/n_v1bl2lwwpishgfq64ivina.jpg',
+        imgs: [
+          'http://pic.58.com/p1/tiny/n_v1bj3gzsaelc3fr4ecvbua.jpg',
+          'http://pic.58.com/p1/tiny/n_v1bj3gzsaelc3fr4ecvbua.jpg',
+          'http://pic.58.com/p1/tiny/n_v1bj3gzsaelc3fr4ecvbua.jpg'
+        ]
+      }]
+    }
+    components = {
+      header: DetailHeader,
+      comment: Comment,
+      detailrecommend: DetailRecommend
+    }
+    methods = {
+      join() {
+        console.log('join it')
+      },
+      tel(val) {
+        console.log(`tel it ${val}`)
+      },
+      copy(val) {
+        console.log(`copy it ${val}`)
+      }
+    }
+  }
+</script>

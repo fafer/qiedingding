@@ -1,0 +1,110 @@
+<style lang="less">
+.header {
+  background: #F6F6F6;
+  height: 90rpx;
+  font-size: 28rpx;
+  color:#4A4A4A;
+  padding: 0 30rpx;
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  .h-right {
+    flex:1;
+    text-align:right;
+  }
+  navigator {
+    display:inline-block;
+  }
+  .h-back:before {
+      content:'';
+      display: inline-block;
+      width: 21.7788rpx;
+      height: 21.7788rpx;
+      box-sizing: border-box;
+      border-left: 3rpx solid #9B9B9B;
+      border-top: 3rpx solid #9B9B9B;
+      transform: rotate(-45deg);
+    }
+  .h-sep { 
+    width: 3rpx;
+    height: 36rpx;
+    display: inline-block;
+    vertical-align: middle;
+    box-sizing: border-box;
+    border-left: 1rpx solid #d8d8d8;
+    margin: 27rpx 26rpx;
+  }
+  .h-dot{ 
+    position: relative; 
+    .i{
+        position: absolute;
+        top: -10rpx;
+        right: -35rpx;
+        display: flex;
+        justify-content:center;
+        align-items:center;
+        height: 30rpx;
+        min-width: 30rpx;
+        border-radius: 50%;
+        background-color: #ff552e;
+        color: #fff;
+        font-size: 22rpx;
+    }
+  }
+}
+</style>
+
+<template>
+  <view class="header">
+    <view class="h-left" wx:if="{{index}}">
+      <navigator url="{{index}}" class="h-back">首页</navigator>
+      <text class="h-sep"></text>
+      <navigator class="h-dot" src="{{cate.value}}">
+        <text>{{cate.name}}</text>
+        <text wx:if="{{msgCount}}" class="i">{{msgCount}}</text>
+      </navigator>
+    </view>
+    <view class="h-right">
+      <text @tap="join">+关注</text>
+      <text class="h-sep"></text>
+      <navigator src="{{postUrl}}">发布</navigator>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import 'wepy-async-function'
+  export default class DetailHeader extends wepy.component {
+    props = {
+      index: {
+        type: String,
+        default: ''
+      },
+      cate: {
+        type: Object
+      }
+    }
+    data = {
+      msgCount: 0
+    }
+    methods = {
+      join() {
+        this.$emit('join')
+      }
+    }
+    async getData() {
+      let that = this
+      return new Promise((resolve, reject) => {
+        setInterval(() => {
+          that.msgCount = that.msgCount + 1
+          that.$apply()
+        }, 1000)
+      })
+    }
+
+    onLoad() {
+      this.getData()
+    }
+  }
+</script>
