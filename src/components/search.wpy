@@ -66,21 +66,19 @@
             &:before {
               content: '';
               position: absolute;
-              width: 3rpx;
-              height: 22.62741699796952rpx;
-              left: 50%;
-              top: 5rpx;
-              margin-left: -1rpx;
+              left:14rpx;
+              top: 4rpx;
+              bottom: 4rpx;
+              right:14rpx;
               background-color: #ffffff;
             }
             &:after {
               content: '';
               position: absolute;
-              width: 22.62741699796952rpx;
-              height: 3rpx;
-              top: 50%;
-              left: 5rpx;
-              margin-top: -1rpx;
+              top:14rpx;
+              left: 4rpx;
+              right: 4rpx;
+              bottom:14rpx;
               background-color: #ffffff;
             }
           }
