@@ -1,0 +1,17 @@
+<script>
+  import wepy from 'wepy'
+  export default class extends wepy.app {
+    config = {
+      pages: [
+        'pages/city',
+        'pages/webView'
+      ],
+      window: {
+        backgroundTextStyle: 'light',
+        navigationBarBackgroundColor: '#fff',
+        navigationBarTitleText: '58国际站',
+        navigationBarTextStyle: 'black'
+      }
+    }
+  }
+</script>

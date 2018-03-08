@@ -1,0 +1,148 @@
+<style lang="less">
+  .internal-city-list-container {
+    font-family: PingFangSC-Regular;
+    font-size: 28rpx;
+    background-color: #ffffff;
+    .position-tip {
+      padding: 40rpx 0 37rpx 30rpx;
+      color: #ff552e;
+      line-height: 40rpx;
+    }
+    .internal-city-list {
+      position: absolute;
+      top: 357rpx;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      .city-list-item-wrap {
+        color: #000000;
+        margin-left: 30rpx;
+        margin-right: 60rpx;
+        font-size: 30rpx;
+        .letter {
+          padding: 20rpx 0 23rpx 0;
+          line-height: 42rpx;
+        }
+        .city-list-item {
+          line-height: 90rpx;
+          border-bottom: 2rpx solid #EEEEEE;
+        }
+      }
+    }
+    .iternal-aside {
+      position: absolute;
+      top: 357rpx;
+      right: 0;
+      bottom: 0;
+      color: #000000;
+      font-size: 24rpx;
+      line-height: 36rpx;
+      width: 23rpx;
+      padding-left: 20rpx;
+      padding-right: 20rpx;
+      background-color: #ffffff;
+    }
+  }
+  .internal-search-result-wrap {
+    position: absolute;
+    top: 357rpx;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    background-color: #ffffff;
+    .internal-search-list-item {
+      padding-left: 30rpx;
+      line-height: 100rpx;
+      border-bottom: 2rpx solid #EEEEEE;
+    }
+  }
+</style>
+
+<template>
+  <view class="internal-city-list-container">
+    <view class="position-tip" wx:if="{{position}}">当前城市：{{position.name}}</view>
+    <scroll-view class="internal-city-list" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{toView}}">
+      <view class="city-list-item-wrap">
+        <repeat for="{{citys}}" key="index" index="index" item="item">
+          <view id="{{'internal-list-'+item.cityName}}" class="letter" wx:if="{{item.cityId === -1}}">{{item.cityName}}</view>
+          <view wx:else class="city-list-item" @tap="go({{item}})">{{item.cityName}}</view>
+        </repeat>
+      </view>
+    </scroll-view>
+    <view class="iternal-aside" hidden="true">
+      <view @tap.stop="scrollTo">#</view>
+      <repeat for="{{aside}}" key="index" index="index" item="item">
+        <view @tap.stop="scrollTo({{item}})">{{item.cityName}}</view>
+      </repeat>
+    </view>
+    <scroll-view class="internal-search-result-wrap" hidden="{{searchs.length === 0}}">
+      <repeat for="{{searchs}}" key="index" index="index" item="item">
+        <view class="internal-search-list-item" @tap="go({{item}})">{{item.cityName}}</view>
+      </repeat>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import {
+    openInternalApp,
+    request
+  } from '@/utils/util'
+  export default class InternalCityList extends wepy.component {
+    data = {
+      position: '',
+      citys: [],
+      searchs: [],
+      aside: [],
+      toView: ''
+    }
+    methods = {
+      initPosition(position) {
+        this.position = position
+      },
+      search(value) {
+        if (value === '') {
+          this.searchs = []
+          return
+        }
+        if (InternalCityList.searchTimeoutId) clearTimeout(InternalCityList.searchTimeoutId)
+        InternalCityList.searchTimeoutId = setTimeout(() => {
+          let temp = []
+          this.citys.forEach((d) => {
+            if (d.cityId !== -1 && d.cityName.indexOf(value) !== -1) temp.push(d)
+          })
+          this.searchs = temp
+          this.$apply()
+        }, 50)
+      },
+      go(item) {
+        openInternalApp(`pages/index/index?cityId=${item.cityId}&dispCityId=${item.dispCityId}&cityName=${item.cityName}`)
+      },
+      scrollTo(item) {
+        if (!item) this.toView = ''
+        else this.toView = 'internal-list-' + item.cityName
+      },
+      init() {
+        if (!InternalCityList.inited) {
+          this.getCityData()
+          InternalCityList.inited = true
+        }
+      }
+    }
+    static searchTimeoutId = ''
+    static inited = false
+    getCityData() {
+      request('https://wxapp.58.com/load/city').then(data => {
+        if (data.code === 0) {
+          this.citys = JSON.parse(data.data)
+          this.aside = this.citys.filter((d) => {
+            return d.cityId === -1
+          })
+          this.$apply()
+        }
+      })
+    }
+  }
+</script>

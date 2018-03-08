@@ -1,0 +1,76 @@
+<style lang="less">
+  .city-tab-wrap {
+    text-align: center;
+    margin-top: 33rpx;
+    margin-bottom: 16rpx;
+    .city-tab {
+      border-top: 2rpx solid #FF552E;
+      border-bottom: 2rpx solid #FF552E;
+      border-left: 2rpx solid #FF552E;
+      border-right: 2rpx solid #FF552E;
+      border-radius: 8rpx;
+      height: 66rpx;
+      display: inline-block;
+      text {
+        width: 162rpx;
+        line-height: 66rpx;
+        box-sizing: border-box;
+        display: inline-block;
+        &:nth-child(2) {
+          border-left: 2rpx solid #FF552E;
+          border-right: 2rpx solid #FF552E;
+        }
+        &.active {
+          background-color: #FF552E;
+          color: #ffffff;
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="city-tab-wrap">
+    <view class="city-tab">
+      <repeat for="{{tabs}}" key="index" index="index" item="item">
+        <text class="{{currentTab === item.id?'active':''}}" @tap="change({{item.id}})">{{item.name}}</text>
+      </repeat>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Tab extends wepy.component {
+    props = {
+      currentTab: {
+        type: Number,
+        twoWay: true,
+        default: 0,
+      }
+    }
+    data = {
+      tabs: [{
+          id: 0,
+          name: '全国'
+        },
+        {
+          id: 1,
+          name: '海外'
+        },
+        {
+          id: 2,
+          name: '乡镇'
+        }
+      ]
+    }
+    methods = {
+      change(index) {
+        if (this.currentTab !== index) {
+          this.currentTab = index
+          this.$emit('change', index)
+        }
+      }
+    }
+  }
+</script>

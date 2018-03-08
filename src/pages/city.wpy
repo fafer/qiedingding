@@ -1,0 +1,86 @@
+<style lang="less">
+  .container {
+    font-family: PingFangSC-Regular;
+    font-size: 28rpx;
+    color: #343434;
+  }
+</style>
+
+<template>
+  <view class="container">
+    <tab :currentTab="currentTab" @change.user="changeTab"></tab>
+    <search @search.user="search" :placehold.sync="placehold"></search>
+    <internalCityList wx:if="{{currentTab === 0}}"></internalCityList>
+    <globalCityList wx:elif="{{currentTab === 1}}" @initPosition.user="initPosition"></globalCityList>
+    <townCityList wx:else></townCityList>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import Tab from '@/components/tab'
+  import Search from '@/components/search'
+  import GlobalCityList from '@/components/globalCityList'
+  import InternalCityList from '@/components/internalCityList'
+  import TownCityList from '@/components/townCityList'
+  export default class City extends wepy.page {
+    data = {
+      currentTab: 1
+    }
+    components = {
+      tab: Tab,
+      search: Search,
+      globalCityList: GlobalCityList,
+      internalCityList: InternalCityList,
+      townCityList: TownCityList
+    }
+    computed = {
+      placehold() {
+        if (this.currentTab === 2) return '输入乡镇名称'
+        else return '输入城市名称'
+      }
+    }
+    methods = {
+      changeTab(index) {
+        this.$invoke('search', 'clear')
+        this.init(index)
+      },
+      initPosition(position) {
+        this.$invoke('internalCityList', 'initPosition', position)
+        this.$invoke('townCityList', 'initPosition', position)
+      },
+      search(value) {
+        switch (this.currentTab) {
+          case 0:
+            this.$invoke('internalCityList', 'search', value)
+            break
+          case 1:
+            this.$invoke('globalCityList', 'search', value)
+            break
+          case 2:
+            this.$invoke('townCityList', 'search', value)
+        }
+      }
+    }
+    init(index) {
+      switch (index) {
+        case 0:
+          this.$invoke('internalCityList', 'init')
+          break
+        case 1:
+          this.$invoke('globalCityList', 'init')
+          break
+        case 2:
+          this.$invoke('townCityList', 'init')
+      }
+    }
+    onShareAppMessage() {
+      return {
+        title:'58同城国际站',
+        path:'/pages/city'
+      }
+    }
+    onLoad() {
+      this.init(this.currentTab)
+    }
+  }
+</script>

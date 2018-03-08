@@ -1,0 +1,145 @@
+<style lang="less">
+  .global-city-list-container {
+    position: absolute;
+    top: 240rpx;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    .item {
+      padding-left: 30rpx;
+      &.global-position-tip {
+        margin-top: 49rpx
+      }
+      .item-tip {
+        color: #8C8C8C;
+        letter-spacing: 0.5rpx;
+        line-height: 28rpx;
+        margin-bottom: 24rpx;
+      }
+      .item-tab {
+        overflow: hidden;
+        margin-left: -32rpx;
+        .tab {
+          float: left;
+          width: 209rpx;
+          height: 72rpx;
+          background-color: #F6F6F6;
+          border-radius: 4rpx;
+          margin-bottom: 30rpx;
+          margin-left: 32rpx;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          line-height: 1;
+        }
+      }
+    }
+  }
+  .global-search-result-wrap {
+    position: absolute;
+    top: 240rpx;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    background-color: #ffffff;
+    .global-search-list-item {
+      padding-left: 30rpx;
+      line-height: 100rpx;
+      border-bottom: 2rpx solid #EEEEEE;
+    }
+  }
+</style>
+
+<template>
+  <view>
+    <scroll-view class="global-city-list-container" scroll-y="true">
+      <view class="item global-position-tip" wx:if="{{position}}">
+        <view class="item-tip">定位城市</view>
+        <view class="item-tab">
+          <navigator wx:if="{{position.url}}" class="tab" url="./webView?url={{position.url}}}">{{position.name}}</navigator>
+          <text wx:else class="tab">{{position.name}}</text>
+        </view>
+      </view>
+      <repeat for="{{citys}}" key="index" index="index" item="item">
+        <view class="item">
+          <view class="item-tip">{{item.countrycn}}</view>
+          <view class="item-tab" wx:if="{{item.citylist.length}}">
+            <repeat for="{{item.citylist}}" key="cityIndex" index="cityIndex" item="cityItem">
+              <navigator class="tab" url="./webView?url={{'https://gm.58.com/j-'+cityItem.dirname+'/'}}">{{cityItem.name}}</navigator>
+            </repeat>
+          </view>
+        </view>
+      </repeat>
+    </scroll-view>
+    <scroll-view class="global-search-result-wrap" hidden="{{searchs.length === 0}}">
+      <repeat for="{{searchs}}" key="index" index="index" item="item">
+        <view class="global-search-list-item">
+          <navigator url="./webView?url={{'https://gm.58.com/j-'+item.dirname+'/'}}">{{item.name}}</navigator>
+        </view>
+      </repeat>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import {
+    getLocation,
+    request
+  } from '@/utils/util'
+  export default class GlobalCityList extends wepy.component {
+    data = {
+      position: '',
+      citys: [],
+      searchs: []
+    }
+    methods = {
+      search(value) {
+        if (value === '') {
+          this.searchs = []
+          return
+        }
+        if (GlobalCityList.searchTimeoutId) clearTimeout(GlobalCityList.searchTimeoutId)
+        GlobalCityList.searchTimeoutId = setTimeout(() => {
+          let temp = []
+          this.citys.forEach((d) => {
+            d.citylist.forEach((city) => {
+              if (city.name.indexOf(value) !== -1) temp.push(city)
+            })
+          })
+          this.searchs = temp
+          this.$apply()
+        }, 50)
+      },
+      init() {
+        if (!GlobalCityList.inited) {
+          getLocation().then(data => {
+            this.getCityData(data.latitude, data.longitude)
+          })
+          GlobalCityList.inited = true
+        }
+      }
+    }
+    static searchTimeoutId = ''
+    static inited = false
+    getCityData(latitude, longitude) {
+      request(`https://g.58.com/getcities/?lat=${latitude}&long=${longitude}`).then(data => {
+        this.citys = data.result
+        if (!this.position) {
+          if (data.gpscityname) {
+            this.position = {
+              name: data.gpscityname,
+              url: data.gpscityurl
+            }
+          }
+          this.$emit('initPosition', {
+            name: data.gpscityname
+          })
+        }
+        this.$apply()
+      })
+    }
+  }
+</script>

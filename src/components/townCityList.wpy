@@ -1,0 +1,283 @@
+<style lang="less">
+  .town-city-list-container {
+    font-family: PingFangSC-Regular;
+    font-size: 28rpx;
+    background-color: #ffffff;
+    .position-tip {
+      padding: 40rpx 0 37rpx 30rpx;
+      color: #ff552e;
+      line-height: 40rpx;
+    }
+    .town-city-nav {
+      display: flex;
+      font-size: 30rpx;
+      line-height: 30rpx;
+      color: #000000;
+      border-bottom: 2rpx solid #EEEEEE;
+      .nav-item {
+        display: flex;
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        padding-top: 15rpx;
+        padding-bottom: 25rpx;
+        &.active {
+          &:before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 60rpx;
+            height: 4rpx;
+            left: 50%;
+            margin-left: -30rpx;
+            border-radius: 5rpx;
+            background-color: #ff552e;
+          }
+        }
+        &.selected {
+          color: #ff552e
+        }
+      }
+    }
+    .town-city-list {
+      position: absolute;
+      top: 427rpx;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      .city-list-item-wrap {
+        color: #000000;
+        margin-left: 30rpx;
+        margin-right: 60rpx;
+        font-size: 30rpx;
+        .city-list-item {
+          line-height: 120rpx;
+          border-bottom: 2rpx solid #EEEEEE;
+          &.active {
+            color: #ff552e
+          }
+        }
+      }
+    }
+  }
+  .town-search-result-wrap {
+    position: absolute;
+    top: 340rpx;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    background-color: #ffffff;
+    .town-search-list-item {
+      margin-left: 30rpx;
+      margin-right: 30rpx;
+      border-bottom: 2rpx solid #EEEEEE;
+      line-height: 1;
+      padding-top: 40rpx;
+      padding-bottom: 40rpx;
+      .town-search-list-item-hd {
+        font-size: 28rpx;
+        color: #333333;
+        margin-bottom: 30rpx;
+      }
+      .town-search-list-item-desc {
+        font-size: 24rpx;
+        color: #6a6a6a;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="town-city-list-container">
+    <view class="position-tip" wx:if="{{position}}">当前城市：{{position.name}}</view>
+    <view class="town-city-nav">
+      <repeat for="{{citys}}" key="index" index="index" item="item">
+        <view wx:if="{{index === level}}" class="nav-item active {{item.value?'selected':''}}" @tap="change({{item}},{{index}})">{{item.name?item.name:item.defaultName}}</view>
+        <view wx:elif="{{item.value}}" class="nav-item selected" @tap="change({{item}},{{index}})">{{item.name}}</view>
+        <view wx:else class="nav-item" @tap.stop="change({{item}},{{index}})">{{item.defaultName}}</view>
+      </repeat>
+    </view>
+    <scroll-view class="town-city-list" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
+      <view wx:if="{{currentCitys.length}}" class="city-list-item-wrap" hidden="{{hideList}}">
+        <repeat for="{{currentCitys}}" key="index" index="index" item="item">
+          <view id="{{'town-list-'+item.id}}" wx:if="{{currentValue === item.id}}" class="city-list-item active" @tap="select({{item}})">{{item.name}}</view>
+          <view id="{{'town-list-'+item.id}}" wx:else class="city-list-item" @tap="select({{item}},{{index}})">{{item.name}}</view>
+        </repeat>
+      </view>
+    </scroll-view>
+    <scroll-view class="town-search-result-wrap" hidden="{{searchs.length === 0}}">
+      <repeat for="{{searchs}}" key="index" index="index" item="item">
+        <view class="town-search-list-item" @tap="go({{item}})">
+          <view class="town-search-list-item-hd">{{item.name}}</view>
+          <view class="town-search-list-item-desc">{{item.desc}}</view>
+        </view>
+      </repeat>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import {
+    openTownApp,
+    request
+  } from '@/utils/util'
+  export default class TownCityList extends wepy.component {
+    data = {
+      position: '',
+      citys: [{
+          defaultName: '选择省',
+          name: '',
+          value: '',
+          index: 0
+        },
+        {
+          defaultName: '选择市',
+          name: '',
+          value: '',
+          index: 0
+        },
+        {
+          defaultName: '选择区/县',
+          name: '',
+          value: '',
+          index: 0
+        },
+        {
+          defaultName: '选择乡镇',
+          name: '',
+          value: '',
+          index: 0
+        }
+      ],
+      level: 0,
+      toView: '',
+      hideList: true,
+      searchs: []
+    }
+    computed = {
+      currentCitys() {
+        return TownCityList.list[this.level]
+      },
+      currentValue() {
+        return this.citys[this.level].value
+      }
+    }
+    methods = {
+      change(tab, index) {
+        if (index !== this.level) {
+          let temp = TownCityList.list[index]
+          if (temp.length) {
+            this.level = index
+            this.hideList = false
+            let _index = tab.index
+            if (_index > 1) {
+              this.toView = 'town-list-' + temp[_index - 2].id
+            } else {
+              this.toView = 'town-list-' + temp[0].id
+            }
+          }
+        }
+      },
+      select(item, index) {
+        let current = this.citys[this.level]
+        current.name = item.name.length > 5 ? item.name.substring(0, 2) + '...' + item.name.substring(item.name.length - 2) : item.name
+        current.value = item.id
+        current.index = index
+        this.hideList = true
+        if (this.level === 3) {
+          openTownApp(`pages/index/index?localId=${this.citys[3].value}`)
+        } else {
+          let temp_level = this.level + 1
+          if (temp_level === 1) this.getCityData(item.id, temp_level)
+          else {
+            this.updateCityData(temp_level, item.list)
+          }
+        }
+      },
+      initPosition(position) {
+        this.position = position
+      },
+      search(value) {
+        if (value === '') {
+          this.searchs = []
+          return
+        }
+        if (TownCityList.searchTimeoutId) clearTimeout(TownCityList.searchTimeoutId)
+        TownCityList.searchTimeoutId = setTimeout(() => {
+          let temp = []
+          TownCityList.towlist.forEach((d) => {
+            if (d.desc.indexOf(value) !== -1 ||
+              d.name.indexOf(value) !== -1 ||
+              d.pinyin.indexOf(value) !== -1 ||
+              d.shortName.indexOf(value) !== -1
+            ) temp.push(d)
+          })
+          this.searchs = temp
+          this.$apply()
+        }, 50)
+      },
+      go(item) {
+        openTownApp(`pages/index/index?localId=${item.id}`)
+      },
+      init() {
+        if (!TownCityList.inited) {
+          this.getCityData('1', 0)
+          this.getTownList()
+          TownCityList.inited = true
+        }
+      }
+    }
+    static dataCache = {}
+    static towlist = []
+    static list = [
+      [],
+      [],
+      [],
+      []
+    ]
+    static searchTimeoutId = ''
+    static inited = false
+    reset(level) {
+      for (let index = level; index < 4; index++) {
+        let temp = this.citys[index]
+        temp.name = ''
+        temp.value = ''
+        temp.index = 0
+        TownCityList.list[index] = []
+      }
+    }
+    getCityData(id, level) {
+      let provinceId = id || ''
+      if (TownCityList.dataCache[provinceId]) {
+        this.updateCityData(level, TownCityList.dataCache[provinceId])
+      }
+      request('https://activity.58.com/wxa/town/listbylevel?provinceId=' + provinceId).then(data => {
+        if (data.code === 0) {
+          let result = data.data.list
+          TownCityList.dataCache[provinceId] = result
+          this.updateCityData(level, result)
+          this.$apply()
+        }
+      })
+    }
+    updateCityData(level, result) {
+      this.reset(level)
+      this.level = level
+      this.hideList = false
+      TownCityList.list[level] = result
+    }
+    getTownList() {
+      request('https://activity.58.com/wxa/town/townlist').then(data => {
+        if (data.code === 0) {
+          TownCityList.towlist = data.data.list
+        }
+      })
+    }
+  }
+</script>

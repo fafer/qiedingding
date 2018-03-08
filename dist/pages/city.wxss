@@ -1,0 +1,6 @@
+@import "./../components/townCityList.wxss";
+@import "./../components/internalCityList.wxss";
+@import "./../components/globalCityList.wxss";
+@import "./../components/search.wxss";
+@import "./../components/tab.wxss";
+.container{font-family:PingFangSC-Regular;font-size:28rpx;color:#343434}
