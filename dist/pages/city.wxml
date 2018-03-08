@@ -1,0 +1,110 @@
+
+  <view class="container">
+    
+  <view class="city-tab-wrap">
+    <view class="city-tab">
+      <block wx:for="{{$tab$tabs}}" wx:for-index="$tab$index" wx:for-item="$tab$item" wx:key="$tab$index">
+        <text class="{{$tab$currentTab === $tab$item.id?'active':''}}" bindtap="$tab$change" data-wpychange-a="{{$tab$item.id}}">{{$tab$item.name}}</text>
+      </block>
+    </view>
+  </view>
+
+    
+  <view class="search-warp">
+    <view class="search">
+      <view class="search-input-wrap">
+        <view class="search-icon-wrap">
+          <view class="search-icon"/>
+        </view>
+        <input placeholder="{{$search$placehold}}" bindinput="$search$search" value="{{$search$inputValue}}"/>
+        <view  wx:if="{{$search$clear}}" class="search-input-clear-wrap">
+          <view class="search-input-clear" bindtap="$search$clear"/>
+        </view>
+      </view>
+      <text class="cancel" bindtap="$search$goBack" data-wpygoback-a="{{1}}">取消</text>
+    </view>
+  </view>
+
+    
+  <view class="internal-city-list-container" wx:if="{{currentTab === 0}}">
+    <view class="position-tip"  wx:if="{{$internalCityList$position}}">当前城市：{{$internalCityList$position.name}}</view>
+    <scroll-view class="internal-city-list" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{$internalCityList$toView}}">
+      <view class="city-list-item-wrap">
+        <block wx:for="{{$internalCityList$citys}}" wx:for-index="$internalCityList$index" wx:for-item="$internalCityList$item" wx:key="$internalCityList$index">
+          <view id="{{'internal-list-'+$internalCityList$item.cityName}}" class="letter"  wx:if="{{$internalCityList$item.cityId === -1}}">{{$internalCityList$item.cityName}}</view>
+          <view wx:else class="city-list-item" bindtap="$internalCityList$go" data-wpygo-a="{{$internalCityList$item}}">{{$internalCityList$item.cityName}}</view>
+        </block>
+      </view>
+    </scroll-view>
+    <view class="iternal-aside" hidden="true">
+      <view catchtap="$internalCityList$scrollTo">#</view>
+      <block wx:for="{{$internalCityList$aside}}" wx:for-index="$internalCityList$index" wx:for-item="$internalCityList$item" wx:key="$internalCityList$index">
+        <view catchtap="$internalCityList$scrollTo" data-wpyscrollto-a="{{$internalCityList$item}}">{{$internalCityList$item.cityName}}</view>
+      </block>
+    </view>
+    <scroll-view class="internal-search-result-wrap" hidden="{{$internalCityList$searchs.length === 0}}">
+      <block wx:for="{{$internalCityList$searchs}}" wx:for-index="$internalCityList$index" wx:for-item="$internalCityList$item" wx:key="$internalCityList$index">
+        <view class="internal-search-list-item" bindtap="$internalCityList$go" data-wpygo-a="{{$internalCityList$item}}">{{$internalCityList$item.cityName}}</view>
+      </block>
+    </scroll-view>
+  </view>
+
+    
+  <view wx:elif="{{currentTab === 1}}">
+    <scroll-view class="global-city-list-container" scroll-y="true">
+      <view class="item global-position-tip"  wx:if="{{$globalCityList$position}}">
+        <view class="item-tip">定位城市</view>
+        <view class="item-tab">
+          <navigator wx:if="{{$globalCityList$position.url}}" class="tab" url="./webView?url={{$globalCityList$position.url}}}">{{$globalCityList$position.name}}</navigator>
+          <text wx:else class="tab">{{$globalCityList$position.name}}</text>
+        </view>
+      </view>
+      <block wx:for="{{$globalCityList$citys}}" wx:for-index="$globalCityList$index" wx:for-item="$globalCityList$item" wx:key="$globalCityList$index">
+        <view class="item">
+          <view class="item-tip">{{$globalCityList$item.countrycn}}</view>
+          <view class="item-tab"  wx:if="{{$globalCityList$item.citylist.length}}">
+            <block wx:for="{{$globalCityList$item.citylist}}" wx:for-index="$globalCityList$cityIndex" wx:for-item="$globalCityList$cityItem" wx:key="$globalCityList$cityIndex">
+              <navigator class="tab" url="./webView?url={{'https://gm.58.com/j-'+$globalCityList$cityItem.dirname+'/'}}">{{$globalCityList$cityItem.name}}</navigator>
+            </block>
+          </view>
+        </view>
+      </block>
+    </scroll-view>
+    <scroll-view class="global-search-result-wrap" hidden="{{$globalCityList$searchs.length === 0}}">
+      <block wx:for="{{$globalCityList$searchs}}" wx:for-index="$globalCityList$index" wx:for-item="$globalCityList$item" wx:key="$globalCityList$index">
+        <view class="global-search-list-item">
+          <navigator url="./webView?url={{'https://gm.58.com/j-'+$globalCityList$item.dirname+'/'}}">{{$globalCityList$item.name}}</navigator>
+        </view>
+      </block>
+    </scroll-view>
+  </view>
+
+    
+  <view class="town-city-list-container" wx:else>
+    <view class="position-tip"  wx:if="{{$townCityList$position}}">当前城市：{{$townCityList$position.name}}</view>
+    <view class="town-city-nav">
+      <block wx:for="{{$townCityList$citys}}" wx:for-index="$townCityList$index" wx:for-item="$townCityList$item" wx:key="$townCityList$index">
+        <view  wx:if="{{$townCityList$index === $townCityList$level}}" class="nav-item active {{$townCityList$item.value?'selected':''}}" bindtap="$townCityList$change" data-wpychange-a="{{$townCityList$item}}" data-wpychange-b="{{$townCityList$index}}">{{$townCityList$item.name?$townCityList$item.name:$townCityList$item.defaultName}}</view>
+        <view wx:elif="{{$townCityList$item.value}}" class="nav-item selected" bindtap="$townCityList$change" data-wpychange-a="{{$townCityList$item}}" data-wpychange-b="{{$townCityList$index}}">{{$townCityList$item.name}}</view>
+        <view wx:else class="nav-item" catchtap="$townCityList$change" data-wpychange-a="{{$townCityList$item}}" data-wpychange-b="{{$townCityList$index}}">{{$townCityList$item.defaultName}}</view>
+      </block>
+    </view>
+    <scroll-view class="town-city-list" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{$townCityList$toView}}" scroll-top="{{$townCityList$scrollTop}}">
+      <view wx:if="{{$townCityList$currentCitys.length}}" class="city-list-item-wrap" hidden="{{$townCityList$hideList}}">
+        <block wx:for="{{$townCityList$currentCitys}}" wx:for-index="$townCityList$index" wx:for-item="$townCityList$item" wx:key="$townCityList$index">
+          <view id="{{'town-list-'+$townCityList$item.id}}" wx:if="{{$townCityList$currentValue === $townCityList$item.id}}" class="city-list-item active" bindtap="$townCityList$select" data-wpyselect-a="{{$townCityList$item}}">{{$townCityList$item.name}}</view>
+          <view id="{{'town-list-'+$townCityList$item.id}}" wx:else class="city-list-item" bindtap="$townCityList$select" data-wpyselect-a="{{$townCityList$item}}" data-wpyselect-b="{{$townCityList$index}}">{{$townCityList$item.name}}</view>
+        </block>
+      </view>
+    </scroll-view>
+    <scroll-view class="town-search-result-wrap" hidden="{{$townCityList$searchs.length === 0}}">
+      <block wx:for="{{$townCityList$searchs}}" wx:for-index="$townCityList$index" wx:for-item="$townCityList$item" wx:key="$townCityList$index">
+        <view class="town-search-list-item" bindtap="$townCityList$go" data-wpygo-a="{{$townCityList$item}}">
+          <view class="town-search-list-item-hd">{{$townCityList$item.name}}</view>
+          <view class="town-search-list-item-desc">{{$townCityList$item.desc}}</view>
+        </view>
+      </block>
+    </scroll-view>
+  </view>
+
+  </view>

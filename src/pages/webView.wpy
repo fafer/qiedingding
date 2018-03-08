@@ -1,0 +1,21 @@
+<template>
+  <web-view src="{{url}}">
+  </web-view>
+</template>
+<script>
+  import wepy from 'wepy'
+  export default class WebView extends wepy.page {
+    onShareAppMessage(options) {
+      return {
+        title:'58同城国际站',
+        path:'/pages/webView?url='+options.webViewUrl
+      }
+    }
+    onLoad(params) {
+      let url = params.url
+      this.setData({
+        url: url
+      })
+    }
+  }
+</script>
