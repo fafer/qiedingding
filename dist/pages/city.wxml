@@ -73,7 +73,7 @@
     <scroll-view class="global-search-result-wrap" hidden="{{$globalCityList$searchs.length === 0}}">
       <block wx:for="{{$globalCityList$searchs}}" wx:for-index="$globalCityList$index" wx:for-item="$globalCityList$item" wx:key="$globalCityList$index">
         <view class="global-search-list-item">
-          <navigator url="./webView?url={{'https://gm.58.com/j-'+$globalCityList$item.dirname+'/'}}">{{$globalCityList$item.name}}</navigator>
+          <navigator hover-class="none" url="./webView?url={{'https://gm.58.com/j-'+$globalCityList$item.dirname+'/'}}">{{$globalCityList$item.name}}</navigator>
         </view>
       </block>
     </scroll-view>
@@ -97,7 +97,7 @@
         </block>
       </view>
     </scroll-view>
-    <scroll-view class="town-search-result-wrap" hidden="{{$townCityList$searchs.length === 0}}">
+    <scroll-view class="town-search-result-wrap" scroll-y="true" hidden="{{$townCityList$searchs.length === 0}}">
       <block wx:for="{{$townCityList$searchs}}" wx:for-index="$townCityList$index" wx:for-item="$townCityList$item" wx:key="$townCityList$index">
         <view class="town-search-list-item" bindtap="$townCityList$go" data-wpygo-a="{{$townCityList$item}}">
           <view class="town-search-list-item-hd">{{$townCityList$item.name}}</view>

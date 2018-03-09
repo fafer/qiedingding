@@ -110,7 +110,7 @@
         </repeat>
       </view>
     </scroll-view>
-    <scroll-view class="town-search-result-wrap" hidden="{{searchs.length === 0}}">
+    <scroll-view class="town-search-result-wrap" scroll-y="true" hidden="{{searchs.length === 0}}">
       <repeat for="{{searchs}}" key="index" index="index" item="item">
         <view class="town-search-list-item" @tap="go({{item}})">
           <view class="town-search-list-item-hd">{{item.name}}</view>
@@ -226,11 +226,8 @@
         openTownApp(`pages/index/index?localId=${item.id}`)
       },
       init() {
-        if (!TownCityList.inited) {
-          this.getCityData('1', 0)
-          this.getTownList()
-          TownCityList.inited = true
-        }
+        this.getCityData('1', 0)
+        this.getTownList()
       }
     }
     static dataCache = {}
@@ -242,7 +239,6 @@
       []
     ]
     static searchTimeoutId = ''
-    static inited = false
     reset(level) {
       for (let index = level; index < 4; index++) {
         let temp = this.citys[index]
@@ -256,6 +252,7 @@
       let provinceId = id || ''
       if (TownCityList.dataCache[provinceId]) {
         this.updateCityData(level, TownCityList.dataCache[provinceId])
+        return
       }
       request('https://activity.58.com/wxa/town/listbylevel?provinceId=' + provinceId).then(data => {
         if (data.code === 0) {
@@ -273,6 +270,7 @@
       TownCityList.list[level] = result
     }
     getTownList() {
+      if(TownCityList.towlist.length) return
       request('https://activity.58.com/wxa/town/townlist').then(data => {
         if (data.code === 0) {
           TownCityList.towlist = data.data.list

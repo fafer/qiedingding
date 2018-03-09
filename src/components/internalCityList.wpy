@@ -125,24 +125,29 @@
         else this.toView = 'internal-list-' + item.cityName
       },
       init() {
-        if (!InternalCityList.inited) {
-          this.getCityData()
-          InternalCityList.inited = true
-        }
+        this.getCityData()
       }
     }
     static searchTimeoutId = ''
-    static inited = false
+    static cacheData
     getCityData() {
+      if(InternalCityList.cacheData) {
+        this.updateData(InternalCityList.cacheData)
+        return
+      }
       request('https://wxapp.58.com/load/city').then(data => {
-        if (data.code === 0) {
-          this.citys = JSON.parse(data.data)
-          this.aside = this.citys.filter((d) => {
-            return d.cityId === -1
-          })
-          this.$apply()
-        }
+        InternalCityList.cacheData = data
+        this.updateData(data)
+        this.$apply()
       })
+    }
+    updateData(data) {
+      if (data.code === 0) {
+        this.citys = JSON.parse(data.data)
+        this.aside = this.citys.filter((d) => {
+          return d.cityId === -1
+        })
+      }
     }
   }
 </script>

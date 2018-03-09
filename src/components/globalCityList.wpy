@@ -76,7 +76,7 @@
     <scroll-view class="global-search-result-wrap" hidden="{{searchs.length === 0}}">
       <repeat for="{{searchs}}" key="index" index="index" item="item">
         <view class="global-search-list-item">
-          <navigator url="./webView?url={{'https://gm.58.com/j-'+item.dirname+'/'}}">{{item.name}}</navigator>
+          <navigator hover-class="none" url="./webView?url={{'https://gm.58.com/j-'+item.dirname+'/'}}">{{item.name}}</navigator>
         </view>
       </repeat>
     </scroll-view>
@@ -114,19 +114,27 @@
         }, 50)
       },
       init() {
-        if (!GlobalCityList.inited) {
-          getLocation().then(data => {
-            this.getCityData(data.latitude, data.longitude)
-          })
-          GlobalCityList.inited = true
-        }
+        getLocation().then(data => {
+          this.getCityData(data.latitude, data.longitude)
+          this.$apply()
+        })
       }
     }
     static searchTimeoutId = ''
-    static inited = false
+    static cacheData
     getCityData(latitude, longitude) {
+      if(GlobalCityList.cacheData)  {
+        this.updateData(GlobalCityList.cacheData)
+        return
+      }
       request(`https://g.58.com/getcities/?lat=${latitude}&long=${longitude}`).then(data => {
-        this.citys = data.result
+        GlobalCityList.cacheData = data
+        this.updateData(data)
+        this.$apply()
+      })
+    }
+    updateData(data) {
+      this.citys = data.result
         if (!this.position) {
           if (data.gpscityname) {
             this.position = {
@@ -138,8 +146,6 @@
             name: data.gpscityname
           })
         }
-        this.$apply()
-      })
     }
   }
 </script>
