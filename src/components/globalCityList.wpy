@@ -116,7 +116,6 @@
       init() {
         getLocation().then(data => {
           this.getCityData(data.latitude, data.longitude)
-          this.$apply()
         })
       }
     }
@@ -130,22 +129,22 @@
       request(`https://g.58.com/getcities/?lat=${latitude}&long=${longitude}`).then(data => {
         GlobalCityList.cacheData = data
         this.updateData(data)
-        this.$apply()
       })
     }
     updateData(data) {
       this.citys = data.result
-        if (!this.position) {
-          if (data.gpscityname) {
-            this.position = {
-              name: data.gpscityname,
-              url: data.gpscityurl
-            }
+      if (!this.position) {
+        if (data.gpscityname) {
+          this.position = {
+            name: data.gpscityname,
+            url: data.gpscityurl
           }
-          this.$emit('initPosition', {
-            name: data.gpscityname
-          })
         }
+        this.$emit('initPosition', {
+          name: data.gpscityname
+        })
+      }
+      this.$apply()
     }
   }
 </script>
